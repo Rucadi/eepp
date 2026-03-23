@@ -3,12 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    self.submodules = true;
-
   };
 
   outputs =
-    { self, nixpkgs }:
+    { self,nixpkgs }:
     let
       systems = [
         "x86_64-linux"
@@ -44,11 +42,7 @@
                 stdenv.mkDerivation {
                   pname = "eepp";
                   version = "unstable";
-                  src = builtins.fetchGit {
-                      url = "https://github.com/SpartanJ/eepp.git";
-                      ref = "develop";
-                      submodules = true;
-                  };
+                  src = self; 
 
                   nativeBuildInputs = [
                     premake5
@@ -63,7 +57,6 @@
                   ];
 
                   configurePhase = ''
-  
                     premake5 --disable-static-build gmake
                   '';
 
