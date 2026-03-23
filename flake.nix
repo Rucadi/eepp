@@ -9,10 +9,6 @@
   outputs =
     {
       self,
-      efsw,
-      soil2,
-      premakeNinja,
-      premakeCMake,
       nixpkgs,
     }:
     let
