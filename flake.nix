@@ -5,19 +5,19 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     self.submodules = true;
     efsw = {
-      url = "path::src/thirdparty/efsw";
+      url = "git+file:src/thirdparty/efsw";
       flake = false;
     };
     soil2 = {
-      url = "path::src/thirdparty/soil2";
+      url = "git+file:src/thirdparty/soil2";
       flake = false;
     };
     premakeNinja = {
-      url = "path:premake/premake-ninja";
+      url = "git+file:premake/premake-ninja";
       flake = false;
     };
     premakeCMake = {
-      url = "path::premake/premake-cmake";
+      url = "git+file:premake/premake-cmake";
       flake = false;
     };
   };
