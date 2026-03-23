@@ -4,13 +4,26 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     self.submodules = true;
+    efsw = {
+      url = "git+file:src/thirdparty/efsw";
+      flake = false;
+    };
+    soil2 = {
+      url = "git+file:src/thirdparty/soil2";
+      flake = false;
+    };
+    premakeNinja = {
+      url = "git+file:premake/premake-ninja";
+      flake = false;
+    };
+    premakeCMake = {
+      url = "git+file:premake/premake-cmake";
+      flake = false;
+    };
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-    }:
+    { self, efsw, soil2, premakeNinja, premakeCMake, nixpkgs }:
     let
       systems = [
         "x86_64-linux"
@@ -28,6 +41,10 @@
               eepp_pkgs = (
                 {
                   stdenv,
+                  efsw,
+                  soil2,
+                  premakeNinja,
+                  premakeCMake,
                   ninja,
                   glew,
                   libx11,
@@ -46,7 +63,7 @@
                 stdenv.mkDerivation {
                   pname = "eepp";
                   version = "unstable";
-                  src = self;
+                  src = ./.;
 
                   nativeBuildInputs = [
                     premake5
@@ -61,6 +78,15 @@
                   ];
 
                   configurePhase = ''
+                    rm -rf src/thirdparty/efsw
+                    rm -rf src/thirdparty/SOIL2
+                    cp -rp ${efsw} src/thirdparty/efsw
+                    cp -rp ${soil2} src/thirdparty/SOIL2
+
+                    rm -rf premake/premake-ninja
+                    rm -rf premake/premake-cmake
+                    cp -rp ${premakeNinja} premake/premake-ninja
+                    cp -rp ${premakeCMake} premake/premake-cmake
 
                     premake5 --disable-static-build gmake
                   '';
@@ -85,6 +111,10 @@
             in
             {
               eepp = pkgs.callPackage eepp_pkgs {
+                efsw = efsw;
+                soil2 = soil2;
+                premakeNinja = premakeNinja;
+                premakeCMake = premakeCMake;
               };
             };
         }) systems
